@@ -2,6 +2,8 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  console.log('🔄 Updating session for path:', request.nextUrl.pathname)
+  
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -22,6 +24,7 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
+          console.log('🍪 Updated session cookies')
         },
       },
     }
@@ -36,15 +39,22 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  console.log('👤 Session check -', user ? 'User authenticated' : 'No user found')
+
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
     !request.nextUrl.pathname.startsWith('/auth')
   ) {
     // no user, potentially respond by redirecting the user to the login page
+    console.log('🚫 Unauthorized access attempt to:', request.nextUrl.pathname)
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
+  }
+
+  if (user) {
+    console.log('✅ Authorized access to:', request.nextUrl.pathname)
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
