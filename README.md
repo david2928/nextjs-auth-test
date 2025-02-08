@@ -1,57 +1,68 @@
-# Next.js Supabase Auth Test Project
+# Next.js 15 Supabase Auth Test Project
 
 ## Objective
-This project serves as a minimal test environment for debugging and implementing Supabase authentication in a Next.js application. It was created to isolate authentication issues and provide a clean implementation using the latest best practices.
+This project serves as a minimal test environment for implementing Supabase authentication in a Next.js 15 application using the latest App Router and Server Components.
 
-### Key Goals
-- Test Supabase authentication flow in isolation
-- Implement proper session handling and persistence
-- Handle OAuth redirects correctly
-- Manage cookies and session state properly
-- Provide a clean reference implementation
+### Key Features
+- Modern Next.js 15 App Router
+- Server Components and Server Actions
+- Supabase Auth with @supabase/ssr
+- Email/Password and OAuth authentication
+- TypeScript and Tailwind CSS
+- Secure session management
+- Protected routes
 
 ## Technologies Used
-- Next.js 14 with App Router
+- Next.js 15 (App Router)
 - TypeScript
 - Tailwind CSS
 - Supabase Auth (@supabase/ssr)
+- Server Actions
 - Server Components
 
 ## Project Structure
-
 ```
 auth-test/
 ├── app/
 │   ├── auth/
-│   │   └── callback/
-│   │       └── route.ts    # OAuth callback handler
-│   └── page.tsx            # Home page with login button
-├── components/
-│   └── LoginButton.tsx     # Login component
-├── lib/
-│   └── supabase.ts         # Supabase client configuration
-├── middleware.ts           # Auth middleware
-└── .env.local             # Environment variables
+│   │   ├── confirm/     # Email confirmation handler
+│   │   └── signout/     # Sign out handler
+│   ├── login/
+│   │   ├── page.tsx     # Login form
+│   │   └── actions.ts   # Auth actions
+│   ├── error/           # Error page
+│   ├── private/         # Example protected page
+│   └── page.tsx         # Home page
+├── utils/
+│   └── supabase/
+│       ├── client.ts    # Browser client
+│       ├── server.ts    # Server client
+│       └── middleware.ts # Auth middleware
+├── middleware.ts        # Route protection
+└── .env.local          # Environment variables
 ```
 
 ## Key Features
 1. **Modern Authentication Setup**
    - Uses the new `@supabase/ssr` package
-   - Proper cookie handling in middleware
+   - Server Components and Actions
+   - Secure cookie handling
    - Session persistence
    - Type-safe implementation
 
-2. **OAuth Implementation**
-   - Google OAuth support
-   - Secure callback handling
-   - PKCE flow support
-   - Error handling
+2. **Security Features**
+   - Protected routes
+   - Server-side session validation
+   - Secure cookie management
+   - CSRF protection
+   - Type safety
 
-3. **Middleware Protection**
-   - Route protection
-   - Session validation
-   - Cookie management
-   - Public routes allowlist
+3. **User Experience**
+   - Clean, modern UI
+   - Responsive design
+   - Error handling
+   - Loading states
+   - Form validation
 
 ## Setup Instructions
 
@@ -69,8 +80,9 @@ auth-test/
 
 3. **Supabase Configuration**
    - Set up a Supabase project
-   - Configure OAuth providers (Google, etc.)
-   - Set up redirect URLs
+   - Configure OAuth providers (if needed)
+   - Set up email templates
+   - Configure redirect URLs
 
 4. **Development**
    ```bash
@@ -79,96 +91,23 @@ auth-test/
 
 ## Implementation Details
 
-### 1. Supabase Client Setup
-```typescript
-import { createClient } from '@supabase/supabase-js'
+### 1. Authentication Flow
+- Server-side authentication using Server Actions
+- Protected routes with middleware
+- Session management with cookies
+- OAuth support with callback handling
 
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
-    auth: {
-      persistSession: true,
-    }
-  }
-)
-```
+### 2. Security Measures
+- Server-side session validation
+- Secure cookie handling
+- CSRF protection
+- Type-safe implementations
 
-### 2. OAuth Flow
-- User clicks login button
-- Redirects to OAuth provider
-- Provider redirects back to callback URL
-- Callback exchanges code for session
-- Session stored in cookies
-- User redirected to home page
-
-### 3. Middleware Protection
-```typescript
-export async function middleware(request: NextRequest) {
-  // Create Supabase client
-  const supabase = createServerClient(...)
-
-  // Validate session
-  await supabase.auth.getSession()
-
-  // Handle cookies
-  return response
-}
-```
-
-## Common Issues Addressed
-
-1. **Session Persistence**
-   - Proper cookie configuration
-   - Session storage in browser
-   - Server-side validation
-
-2. **OAuth Redirect Issues**
-   - Correct callback URL configuration
-   - Error handling in callback route
-   - State parameter validation
-
-3. **Cookie Management**
-   - Secure cookie settings
-   - Cookie persistence
-   - Cross-domain considerations
-
-## Testing the Implementation
-
-1. **Authentication Flow**
-   - Click the login button
-   - Complete OAuth process
-   - Verify redirect back to application
-   - Check session persistence
-
-2. **Protected Routes**
-   - Attempt to access protected route
-   - Verify redirect to login
-   - Verify access after authentication
-
-3. **Session Management**
-   - Check session persistence across refreshes
-   - Verify cookie storage
-   - Test session expiration
-
-## Best Practices Implemented
-
-1. **Security**
-   - PKCE flow for OAuth
-   - Secure cookie settings
-   - Environment variable protection
-   - Type safety
-
-2. **Error Handling**
-   - Comprehensive error catching
-   - User-friendly error messages
-   - Logging for debugging
-
-3. **Code Organization**
-   - Clean component structure
-   - Separation of concerns
-   - Type definitions
-   - Middleware organization
+### 3. User Experience
+- Modern UI with Tailwind CSS
+- Responsive design
+- Form validation
+- Error handling
 
 ## Contributing
 Feel free to use this project as a reference or starting point for your own Supabase authentication implementation. Issues and pull requests are welcome.
